@@ -9,20 +9,7 @@ use mysql::prelude::*;
 
 
 fn main(){
-//ispis rezultata
-/*
-    let url = "mysql://root:root@localhost:3306/zbrajalica";
-    let pool = Pool::new(url).unwrap();
-    let mut conn = pool.get_conn().unwrap();
 
-    conn.query_iter("SELECT id_igre, rezultat FROM rezultat")
-    .unwrap()
-    .for_each(|row| {
-        let r:(i32, i32)=from_row(row.unwrap());
-    println!("{}, {}",r.0, r.1);
-    });
-
-*/
     //spajanje na bazu
     let url = "mysql://root:root@localhost:3306/zbrajalica";
     let pool = Pool::new(url).unwrap();
@@ -70,7 +57,6 @@ fn main(){
     .unwrap()
     .for_each(|row| {
         let r:(i32, i32)=from_row(row.unwrap());
-        println!("{}, {}",r.0, r.1);
         id_zadnjeg_rezultata=r.0;
     });
     
@@ -83,5 +69,14 @@ fn main(){
         "rezultat" => konacni_rezultat,
     }
     ).unwrap();
+
+    //ispis rezultata
+    println!("\nCurent results are: ");
+    conn.query_iter("SELECT id_igre, rezultat FROM rezultat")
+    .unwrap()
+    .for_each(|row| {
+        let r:(i32, i32)=from_row(row.unwrap());
+    println!("player {}, answerd {} correctly",r.0, r.1);
+    });
 
 }
